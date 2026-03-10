@@ -1,8 +1,8 @@
-<p align="center">
-  <img src="https://i.ibb.co/dJ0gpJf1/photo-2025-06-16-12-07-05-7516517596376596504.jpg" alt="VJ-Filter-Bot Logo">
+<p aliFILTERING gn="center">
+  <img src="https://i.ibb.co/dJ0gpJf1/photo-2025-06-16-12-07-05-7516517596376596504.jpg" alt="MovieCenter-Logo">
 </p>
 <h1 align="center">
-  VJ FILTER BOT
+  MCM  BOT
 </h1>
 
 ![Typing SVG](https://readme-typing-svg.herokuapp.com/?lines=Welcome+To+VJ+Filter+Bot!)
@@ -206,5 +206,6 @@ Selling The Codes To Other People For Money Is *Strictly Prohibited*.</b>
 </pre>
 </p>
 </details>
+
 
 
