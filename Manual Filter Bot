@@ -1,0 +1,77 @@
+from pyrogram import Client, filters
+from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+
+API_ID = 20543704
+API_HASH = "08a140d74b8877f396efa2ece072fec3"
+BOT_TOKEN = "8745961167:AAEHsFp14fQ7ceqYqDcaSSaFYPFXyPGZGIk"
+
+bot = Client("mybot", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN)
+
+# 🔹 In-memory storage (you can upgrade to DB later)
+FILTERS = {}
+FILES = {}
+
+# 🔹 Start Message
+@bot.on_message(filters.command("start"))
+async def start(client, message):
+    buttons = [
+        [InlineKeyboardButton("📂 Filters", callback_data="filters")],
+        [InlineKeyboardButton("📁 File Store", callback_data="store")]
+    ]
+    await message.reply_text(
+        "👋 Welcome to My Bot!",
+        reply_markup=InlineKeyboardMarkup(buttons)
+    )
+
+# 🔹 Add Filter
+@bot.on_message(filters.command("addfilter"))
+async def add_filter(client, message):
+    try:
+        _, name, reply = message.text.split(" ", 2)
+        FILTERS[name.lower()] = reply
+        await message.reply_text(f"✅ Filter '{name}' added")
+    except:
+        await message.reply_text("Usage: /addfilter kaduva Your message")
+
+# 🔹 Filter Trigger
+@bot.on_message(filters.text)
+async def check_filter(client, message):
+    text = message.text.lower()
+    for word in FILTERS:
+        if word in text:
+            await message.reply_text(
+                FILTERS[word],
+                reply_markup=InlineKeyboardMarkup([
+                    [InlineKeyboardButton("🌐 Open", url="https://google.com")],
+                    [InlineKeyboardButton("⚡ Command", callback_data="cmd_test")]
+                ])
+            )
+
+# 🔹 Callback (popup / command)
+@bot.on_callback_query()
+async def callbacks(client, query):
+    if query.data == "cmd_test":
+        await query.answer("⚡ Command executed!", show_alert=True)
+
+    elif query.data == "filters":
+        await query.message.reply_text("Send filter name like: kaduva")
+
+    elif query.data == "store":
+        await query.message.reply_text("Send a file to store")
+
+# 🔹 File Store
+@bot.on_message(filters.document | filters.video)
+async def save_file(client, message):
+    file_id = message.document.file_id if message.document else message.video.file_id
+    FILES["last"] = file_id
+    await message.reply_text("✅ File stored! Use /getfile")
+
+# 🔹 Get File
+@bot.on_message(filters.command("getfile"))
+async def get_file(client, message):
+    if "last" in FILES:
+        await message.reply_document(FILES["last"])
+    else:
+        await message.reply_text("No file stored")
+
+bot.run()
